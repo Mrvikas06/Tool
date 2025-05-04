@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Professional Converter Suite - Black & White Theme</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+  }
+  #app {
+    max-width: 1100px;
+    height: calc(100vh - 50px);
+    margin: 0 auto;
+    background: #1b1b1b;
+    display: flex;
+    border-radius: 12px 12px 0 0;
+    box-shadow:
+      0 0 20px 5px rgba(230,230,230,0.15),
+      inset 0 0 12px #222;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+  nav#sidebar {
+    width: 280px;
+    background: #252525;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    border-right: 1px solid #444;
+  }
+  nav#sidebar h3 {
+    color: #ddd;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.6rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 1.2rem;
+    user-select: none;
+    text-transform: uppercase;
+  }
+  #nav-categories {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  .category {
+    margin-bottom: 12px;
+  }
+  .category-title {
+    color: #bbb;
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin-left: 1rem;
+    margin-bottom: 0.7rem;
+    letter-spacing: 0.04em;
+    user-select: none;
+    text-transform: uppercase;
+  }
+  .tab-button {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1.6rem;
+    margin: 0 1rem 0.6rem;
+    background: transparent;
+    border-radius: 12px;
+    border: none;
+    color: #ccc;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.25s, color 0.25s;
+    letter-spacing: 0.03em;
+    gap: 0.7rem;
+  }
+  .tab-button:hover {
+    background: #333;
+    color: #fff;
+  }
+  .tab-button.active {
+    background: #fff;
+    color: #111;
+    font-weight: 700;
+    box-shadow: 0 0 16px #fff;
+  }
+  main#content {
+    flex-grow: 1;
+    overflow-y: auto;
+    background: #181818;
+    padding: 2rem 3rem;
+    border-radius: 0 12px 12px 0;
+    color: #eee;
+  }
+  h2.tool-title {
+    color: #eee;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-top: 0;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+  label {
+    color: #aaa;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 1.2rem;
+    display: block;
+    letter-spacing: 0.02em;
+  }
+  input[type=file], input[type=password], input[type=text], input[type=number], button, textarea, select {
+    margin-top: 0.6rem;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background-color: #292929;
+    color: #eee;
+    box-shadow: inset 0 0 10px #000;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    resize: vertical;
+  }
+  input[type=file]::-webkit-file-upload-button {
+    cursor: pointer;
+    background-color: #444;
+    color: #eee;
+    border-radius: 8px 0 0 8px;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+    font-family: 'Segoe UI', sans-serif;
+    letter-spacing: 0.02em;
+    box-shadow: 0 0 8px #555;
+    transition: background-color 0.3s;
+  }
+  input[type=file]:focus, input[type=password]:focus, input[type=text]:focus, input[type=number]:focus, textarea:focus, select:focus {
+    background-color: #3a3a3a;
+    box-shadow: 0 0 14px #aaa;
+    color: #fff;
+  }
+  button {
+    margin-top: 1.3rem;
+    background-color: #eee;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #111;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    box-shadow: 0 6px 14px #ccc;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    padding: 0.8rem 1.2rem;
+    user-select: none;
+  }
+  button:disabled {
+    cursor: not-allowed;
+    background-color: #444;
+    box-shadow: none;
+    color: #777;
+  }
+  button:hover:not(:disabled) {
+    background-color: #ddd;
+    box-shadow: 0 10px 30px #bbb;
+    color: #000;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 180px;
+    background: #292929;
+    color: #ddd;
+    box-shadow: inset 0 0 8px #000;
+  }
+  select {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-position: right 1rem center;
+    background-repeat: no-repeat;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="gray" height="10" viewBox="0 0 24 24" width="10" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-size: 10px;
+    padding-right: 2rem;
+  }
+  .status-message {
+    margin-top: 1rem;
+    color: #eee;
+    font-weight: 600;
+    user-select: text;
+    white-space: pre-wrap;
+    min-height: 2em;
+    font-family: 'Segoe UI Mono', monospace;
+    font-size: 0.94rem;
+  }
+  .status-error {
+    color: #f55;
+  }
+  .warning {
+    margin-top: 0.8rem;
+    color: #bbb;
+    font-style: italic;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  a.download-link {
+    display: inline-block;
+    margin-top: 0.8rem;
+    padding: 0.7rem 1.6rem;
+    border-radius: 20px;
+    background: #333;
+    color: #eee;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 18px #222;
+    transition: background-color 0.3s;
+  }
+  a.download-link:hover {
+    background: #555;
+    color: #fff;
+    box-shadow: 0 10px 30px #555;
+  }
+  /* Scrollbars */
+  main#content::-webkit-scrollbar {
+    width: 10px;
+  }
+  main#content::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 8px;
+  }
+  #nav-categories::-webkit-scrollbar {
+    width: 6px;
+  }
+  #nav-categories::-webkit-scrollbar-thumb {
+    background: #777;
+    border-radius: 3px;
+  }
+  /* Responsive */
+  @media (max-width: 820px) {
+    #app {
+      flex-direction: column;
+      height: calc(100vh - 50px);
+      border-radius: 0;
+      padding-bottom: 0;
+    }
+    nav#sidebar {
+      width: 100%;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid #444;
+      padding: 1rem 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .category {
+      margin: 0 1rem 10px;
+      flex-basis: 100%;
+      text-align: center;
+    }
+    .tab-button {
+      margin: 0.3rem 0.6rem;
+      flex-basis: auto;
+      min-width: 140px;
+      border-radius: 24px;
+    }
+    main#content {
+      border-radius: 0;
+      padding: 1.5rem 1.8rem;
+      flex-grow: initial;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    h2.tool-title {
+      font-size: 1.6rem;
+    }
+  }
+
+  /* Footer */
+  footer#app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 50px;
+    background: #111;
+    color: #eee;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    letter-spacing: 0.06em;
+    font-family: 'Segoe UI Semibold', sans-serif;
+    font-size: 1rem;
+    border-top: 1px solid #444;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+<div id="app" role="application" aria-label="Professional All-in-One Converter Suite">
+  <nav id="sidebar" aria-label="Navigation Sidebar">
+    <h3>Converter Suite</h3>
+    <div id="nav-categories" tabindex="0">
+      <div class="category" role="group" aria-label="PDF Tools">
+        <div class="category-title">PDF Tools</div>
+        <button class="tab-button active" data-target="merge" role="tab" aria-selected="true" tabindex="0" aria-controls="merge" aria-label="Merge PDFs Tool">📄 Merge PDFs</button>
+        <button class="tab-button" data-target="split" role="tab" aria-selected="false" tabindex="-1" aria-controls="split" aria-label="Split PDF Tool">✂️ Split PDF</button>
+        <button class="tab-button" data-target="lockpdf" role="tab" aria-selected="false" tabindex="-1" aria-controls="lockpdf" aria-label="Lock PDF Tool">🔒 Lock PDF</button>
+        <button class="tab-button" data-target="unlockpdf" role="tab" aria-selected="false" tabindex="-1" aria-controls="unlockpdf" aria-label="Unlock PDF Tool">🔓 Unlock PDF</button>
+        <button class="tab-button" data-target="img2pdf" role="tab" aria-selected="false" tabindex="-1" aria-controls="img2pdf" aria-label="Image to PDF Tool">🖼️ Image to PDF</button>
+        <button class="tab-button" data-target="pdf2text" role="tab" aria-selected="false" tabindex="-1" aria-controls="pdf2text" aria-label="Extract PDF Text Tool">🔍 Extract PDF Text</button>
+      </div>
+      <div class="category" role="group" aria-label="Office Tools">
+        <div class="category-title">Office Tools</div>
+        <button class="tab-button" data-target="excel2pdf" role="tab" aria-selected="false" tabindex="-1" aria-controls="excel2pdf" aria-label="Excel to PDF Tool">📊 Excel to PDF</button>
+        <button class="tab-button" data-target="word2pdf" role="tab" aria-selected="false" tabindex="-1" aria-controls="word2pdf" aria-label="Word to PDF Tool">📝 Word to PDF</button>
+        <button class="tab-button" data-target="ppt2pdf" role="tab" aria-selected="false" tabindex="-1" aria-controls="ppt2pdf" aria-label="PowerPoint to PDF Tool">📽️ PPT to PDF</button>
+      </div>
+      <div class="category" role="group" aria-label="Audio Tools">
+        <div class="category-title">Audio Tools</div>
+        <button class="tab-button" data-target="audioConvert" role="tab" aria-selected="false" tabindex="-1" aria-controls="audioConvert" aria-label="Audio Format Converter Tool">🎵 Audio Converter</button>
+        <button class="tab-button" data-target="audioTrim" role="tab" aria-selected="false" tabindex="-1" aria-controls="audioTrim" aria-label="Audio Trimmer Tool">✂️ Audio Trimmer</button>
+      </div>
+      <div class="category" role="group" aria-label="Video Tools">
+        <div class="category-title">Video Tools</div>
+        <button class="tab-button" data-target="videoConvert" role="tab" aria-selected="false" tabindex="-1" aria-controls="videoConvert" aria-label="Video Format Converter Tool">📹 Video Converter</button>
+        <button class="tab-button" data-target="videoTrim" role="tab" aria-selected="false" tabindex="-1" aria-controls="videoTrim" aria-label="Video Trimmer Tool">✂️ Video Trimmer</button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="content" tabindex="0">
+    <!-- The START of all tool sections -->
+    <!-- Merge PDFs -->
+    <section id="merge" role="tabpanel" aria-labelledby="merge-tab" tabindex="0">
+      <h2 class="tool-title">Merge PDFs</h2>
+      <label for="merge-files">Select PDF files to merge (multiple):</label>
+      <input type="file" id="merge-files" accept="application/pdf" multiple />
+      <button id="merge-btn" disabled>Merge and Download</button>
+      <div id="merge-status" class="status-message" aria-live="polite"></div>
+    </section>
+
+    <!-- Split PDF -->
+    <section id="split" role="tabpanel" aria-labelledby="split-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Split PDF</h2>
+      <label for="split-file">Select a PDF file to split:</label>
+      <input type="file" id="split-file" accept="application/pdf" />
+      <label for="split-page">Page number to extract (1-based):</label>
+      <input type="number" id="split-page" min="1" value="1" />
+      <button id="split-btn" disabled>Extract Page and Download</button>
+      <div id="split-status" class="status-message" aria-live="polite"></div>
+    </section>
+
+    <!-- Lock PDF -->
+    <section id="lockpdf" role="tabpanel" aria-labelledby="lockpdf-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Lock PDF (Password Protect)</h2>
+      <label for="lockpdf-file">Select a PDF file to lock:</label>
+      <input type="file" id="lockpdf-file" accept="application/pdf" />
+      <label for="lock-pwd">Enter password (not supported - placeholder):</label>
+      <input type="password" id="lock-pwd" placeholder="Password" />
+      <button id="lockpdf-btn" disabled>Lock and Download PDF</button>
+      <div id="lockpdf-status" class="status-message" aria-live="polite"></div>
+      <p class="warning">Password protection is not currently supported client-side. Downloads original file.</p>
+    </section>
+
+    <!-- Unlock PDF -->
+    <section id="unlockpdf" role="tabpanel" aria-labelledby="unlockpdf-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Unlock PDF (Remove Password)</h2>
+      <label for="unlockpdf-file">Select a password-protected PDF file:</label>
+      <input type="file" id="unlockpdf-file" accept="application/pdf" />
+      <label for="unlock-pwd">Enter password (placeholder):</label>
+      <input type="password" id="unlock-pwd" placeholder="Password" />
+      <button id="unlockpdf-btn" disabled>Unlock and Download PDF</button>
+      <div id="unlockpdf-status" class="status-message" aria-live="polite"></div>
+      <p class="warning">Unlocking password-protected PDFs is not yet supported client-side. Downloads original file.</p>
+    </section>
+
+    <!-- Image to PDF -->
+    <section id="img2pdf" role="tabpanel" aria-labelledby="img2pdf-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Image to PDF</h2>
+      <label for="img2pdf-files">Select image files (JPG, PNG):</label>
+      <input type="file" id="img2pdf-files" accept="image/jpeg,image/png" multiple />
+      <button id="img2pdf-btn" disabled>Convert and Download PDF</button>
+      <div id="img2pdf-status" class="status-message" aria-live="polite"></div>
+    </section>
+
+    <!-- Extract Text PDF -->
+    <section id="pdf2text" role="tabpanel" aria-labelledby="pdf2text-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Extract Text from PDF</h2>
+      <label for="pdf2text-file">Select a PDF file:</label>
+      <input type="file" id="pdf2text-file" accept="application/pdf" />
+      <button id="pdf2text-btn" disabled>Extract Text</button>
+      <textarea id="pdf2text-output" readonly placeholder="Extracted text will appear here..."></textarea>
+      <div id="pdf2text-status" class="status-message" aria-live="polite"></div>
+    </section>
+
+    <!-- Excel to PDF -->
+    <section id="excel2pdf" role="tabpanel" aria-labelledby="excel2pdf-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Excel to PDF</h2>
+      <label for="excel2pdf-file">Select an Excel file (.xlsx, .xls):</label>
+      <input type="file" id="excel2pdf-file" accept=".xlsx,.xls" />
+      <button id="excel2pdf-btn" disabled>Convert and Download PDF</button>
+      <div id="excel2pdf-status" class="status-message" aria-live="polite"></div>
+      <p class="warning">
+        Basic conversion: text only, no formatting.
+      </p>
+    </section>
+
+    <!-- Word to PDF -->
+    <section id="word2pdf" role="tabpanel" aria-labelledby="word2pdf-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Word to PDF</h2>
+      <label for="word2pdf-file">Select a Word document (.docx):</label>
+      <input type="file" id="word2pdf-file" accept=".docx" />
+      <button id="word2pdf-btn" disabled>Convert and Download PDF</button>
+      <div id="word2pdf-status" class="status-message" aria-live="polite"></div>
+      <p class="warning">
+        Plain text extraction only.
+      </p>
+    </section>
+
+    <!-- PPT to PDF -->
+    <section id="ppt2pdf" role="tabpanel" aria-labelledby="ppt2pdf-tab" tabindex="0" hidden>
+      <h2 class="tool-title">PowerPoint to PDF</h2>
+      <label for="ppt2pdf-file">Select a PowerPoint file (.pptx):</label>
+      <input type="file" id="ppt2pdf-file" accept=".pptx" />
+      <button id="ppt2pdf-btn" disabled>Convert and Download PDF</button>
+      <div id="ppt2pdf-status" class="status-message" aria-live="polite"></div>
+      <p class="warning">
+        Extracts slide text only.
+      </p>
+    </section>
+
+    <!-- Audio converter -->
+    <section id="audioConvert" role="tabpanel" aria-labelledby="audioConvert-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Audio Format Converter</h2>
+      <label for="audio-input">Select audio file:</label>
+      <input type="file" id="audio-input" accept="audio/*" />
+      <label for="audio-format">Select output format:</label>
+      <select id="audio-format" aria-label="Select output format">
+        <option value="mp3" selected>MP3</option>
+        <option value="wav">WAV</option>
+        <option value="ogg">OGG</option>
+        <option value="aac">AAC</option>
+      </select>
+      <button id="audio-convert-btn" disabled>Convert and Download</button>
+      <div id="audio-convert-status" class="status-message" aria-live="polite"></div>
+    </section>
+
+    <!-- Audio trim -->
+    <section id="audioTrim" role="tabpanel" aria-labelledby="audioTrim-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Audio Trimmer</h2>
+      <label for="audio-trim-input">Select audio file:</label>
+      <input type="file" id="audio-trim-input" accept="audio/*" />
+      <label for="audio-trim-start">Start time (seconds):</label>
+      <input type="number" id="audio-trim-start" min="0" step="0.1" value="0" />
+      <label for="audio-trim-end">End time (seconds):</label>
+      <input type="number" id="audio-trim-end" min="0" step="0.1" value="10" />
+      <button id="audio-trim-btn" disabled>Trim and Download</button>
+      <div id="audio-trim-status" class="status-message" aria-live="polite"></div>
+    </section>
+
+    <!-- Video converter -->
+    <section id="videoConvert" role="tabpanel" aria-labelledby="videoConvert-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Video Format Converter</h2>
+      <label for="video-input">Select video file:</label>
+      <input type="file" id="video-input" accept="video/*" />
+      <label for="video-format">Select output format:</label>
+      <select id="video-format" aria-label="Select output format">
+        <option value="mp4" selected>MP4</option>
+        <option value="webm">WebM</option>
+        <option value="avi">AVI</option>
+        <option value="mov">MOV</option>
+      </select>
+      <button id="video-convert-btn" disabled>Convert and Download</button>
+      <div id="video-convert-status" class="status-message" aria-live="polite"></div>
+    </section>
+
+    <!-- Video trim -->
+    <section id="videoTrim" role="tabpanel" aria-labelledby="videoTrim-tab" tabindex="0" hidden>
+      <h2 class="tool-title">Video Trimmer</h2>
+      <label for="video-trim-input">Select video file:</label>
+      <input type="file" id="video-trim-input" accept="video/*" />
+      <label for="video-trim-start">Start time (seconds):</label>
+      <input type="number" id="video-trim-start" min="0" step="0.1" value="0" />
+      <label for="video-trim-end">End time (seconds):</label>
+      <input type="number" id="video-trim-end" min="0" step="0.1" value="10" />
+      <button id="video-trim-btn" disabled>Trim and Download</button>
+      <div id="video-trim-status" class="status-message" aria-live="polite"></div>
+    </section>
+  </main>
+</div>
+
+<footer id="app-footer" role="contentinfo">
+  Made by Vikas Kumar Singh
+</footer>
+
+<!-- External Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.7.107/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+
+<script>
+  // Tab management
+  (() => {
+    const tabs = Array.from(document.querySelectorAll('.tab-button'));
+    const sections = Array.from(document.querySelectorAll('main#content > section'));
+
+    function activateTab(button) {
+      tabs.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+        b.tabIndex = -1;
+      });
+      sections.forEach(s => s.hidden = true);
+      button.classList.add('active');
+      button.setAttribute('aria-selected', 'true');
+      button.tabIndex = 0;
+      const targetId = button.getAttribute('data-target');
+      const targetSection = document.getElementById(targetId);
+      if (targetSection) {
+        targetSection.hidden = false;
+        targetSection.focus();
+      }
+    }
+
+    tabs.forEach(button => {
+      button.addEventListener('click', () => activateTab(button));
+      button.addEventListener('keydown', e => {
+        if (['ArrowUp','ArrowLeft','ArrowDown','ArrowRight'].includes(e.key)) {
+          e.preventDefault();
+          let idx = tabs.indexOf(document.activeElement);
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') idx = (idx + 1) % tabs.length;
+          else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') idx = (idx - 1 + tabs.length) % tabs.length;
+          tabs[idx].focus();
+          activateTab(tabs[idx]);
+        }
+      });
+    });
+  })();
+
+  const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+  // Utility download
+  function downloadBlob(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  // Merge PDFs
+  {
+    const input = document.getElementById('merge-files');
+    const btn = document.getElementById('merge-btn');
+    const status = document.getElementById('merge-status');
+    input.addEventListener('change', () => {
+      btn.disabled = input.files.length < 2;
+      status.textContent = '';
+    });
+    btn.addEventListener('click', async () => {
+      status.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Merging...';
+      try {
+        const mergedPdf = await PDFDocument.create();
+        for (const file of input.files) {
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await PDFDocument.load(arrayBuffer);
+          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+          copiedPages.forEach(page => mergedPdf.addPage(page));
+        }
+        const mergedPdfBytes = await mergedPdf.save();
+        downloadBlob(new Blob([mergedPdfBytes], { type: 'application/pdf' }), 'merged.pdf');
+        status.textContent = 'Merged PDF created.';
+      } catch (e) {
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.textContent = 'Merge and Download';
+      btn.disabled = input.files.length < 2;
+    });
+  }
+
+  // Split PDF
+  {
+    const input = document.getElementById('split-file');
+    const pageInput = document.getElementById('split-page');
+    const btn = document.getElementById('split-btn');
+    const status = document.getElementById('split-status');
+    input.addEventListener('change', () => {
+      btn.disabled = !input.files.length;
+      status.textContent = '';
+      pageInput.value = 1;
+    });
+    pageInput.addEventListener('input', () => {
+      status.textContent = '';
+    });
+    btn.addEventListener('click', async () => {
+      status.textContent = '';
+      if (!input.files.length) {
+        status.textContent = 'Please select a PDF file.';
+        status.classList.add('status-error');
+        return;
+      }
+      const pageNum = Number(pageInput.value);
+      if (isNaN(pageNum) || pageNum < 1) {
+        status.textContent = 'Invalid page number.';
+        status.classList.add('status-error');
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Extracting...';
+      try {
+        const arrBuf = await input.files[0].arrayBuffer();
+        const pdf = await PDFDocument.load(arrBuf);
+        if (pageNum > pdf.getPageCount()) {
+          status.textContent = `File has only ${pdf.getPageCount()} pages.`;
+          status.classList.add('status-error');
+          btn.disabled = false;
+          btn.textContent = 'Extract Page and Download';
+          return;
+        }
+        const newPdf = await PDFDocument.create();
+        const [page] = await newPdf.copyPages(pdf, [pageNum - 1]);
+        newPdf.addPage(page);
+        const pdfBytes = await newPdf.save();
+        downloadBlob(new Blob([pdfBytes], { type: 'application/pdf' }), `page-${pageNum}.pdf`);
+        status.textContent = `Page ${pageNum} extracted.`;
+      } catch (e) {
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.textContent = 'Extract Page and Download';
+      btn.disabled = false;
+    });
+  }
+
+  // Lock PDF - warning only
+  {
+    const input = document.getElementById('lockpdf-file');
+    const pwdInput = document.getElementById('lock-pwd');
+    const btn = document.getElementById('lockpdf-btn');
+    const status = document.getElementById('lockpdf-status');
+
+    function validate() {
+      btn.disabled = !input.files.length || pwdInput.value.length === 0;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    }
+    input.addEventListener('change', validate);
+    pwdInput.addEventListener('input', validate);
+    btn.addEventListener('click', () => {
+      status.textContent = 'Password protection is not supported client-side. Downloading original file.';
+      if(input.files.length > 0) {
+        downloadBlob(input.files[0], input.files[0].name.replace(/\.pdf$/i,'-locked.pdf'));
+      }
+    });
+  }
+
+  // Unlock PDF - warning only
+  {
+    const input = document.getElementById('unlockpdf-file');
+    const pwdInput = document.getElementById('unlock-pwd');
+    const btn = document.getElementById('unlockpdf-btn');
+    const status = document.getElementById('unlockpdf-status');
+
+    function validate() {
+      btn.disabled = !input.files.length || pwdInput.value.length === 0;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    }
+    input.addEventListener('change', validate);
+    pwdInput.addEventListener('input', validate);
+    btn.addEventListener('click', () => {
+      status.textContent = 'PDF unlocking is not supported client-side. Downloading original file.';
+      if(input.files.length > 0) {
+        downloadBlob(input.files[0], input.files[0].name.replace(/\.pdf$/i, '-unlocked.pdf'));
+      }
+    });
+  }
+
+  // Image to PDF
+  {
+    const input = document.getElementById('img2pdf-files');
+    const btn = document.getElementById('img2pdf-btn');
+    const status = document.getElementById('img2pdf-status');
+
+    input.addEventListener('change', () => {
+      btn.disabled = input.files.length === 0;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    });
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.textContent = 'Converting...';
+      status.textContent = '';
+      status.classList.remove('status-error');
+
+      try {
+        const pdfDoc = await PDFDocument.create();
+
+        for (const file of input.files) {
+          const imgBytes = await file.arrayBuffer();
+          let img;
+          if(file.type === 'image/jpeg' || file.type === 'image/jpg') {
+            img = await pdfDoc.embedJpg(imgBytes);
+          } else if(file.type === 'image/png') {
+            img = await pdfDoc.embedPng(imgBytes);
+          } else {
+            status.textContent = 'Unsupported image format skipped.';
+            continue;
+          }
+          const { width, height } = img.scale(1);
+          const page = pdfDoc.addPage([width, height]);
+          page.drawImage(img, {x:0, y:0, width, height});
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        downloadBlob(new Blob([pdfBytes], {type:'application/pdf'}), 'images.pdf');
+        status.textContent = 'PDF created from images.';
+      } catch(e) {
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.textContent = 'Convert and Download PDF';
+      btn.disabled = input.files.length === 0;
+    });
+  }
+
+  // Extract text PDF
+  {
+    const input = document.getElementById('pdf2text-file');
+    const btn = document.getElementById('pdf2text-btn');
+    const status = document.getElementById('pdf2text-status');
+    const output = document.getElementById('pdf2text-output');
+
+    input.addEventListener('change', () => {
+      btn.disabled = input.files.length === 0;
+      status.textContent = '';
+      output.value = '';
+      status.classList.remove('status-error');
+    });
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.textContent = 'Extracting text...';
+      status.textContent = '';
+      output.value = '';
+      status.classList.remove('status-error');
+      try {
+        const file = input.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        const loadingTask = pdfjsLib.getDocument({data: arrayBuffer});
+        const pdf = await loadingTask.promise;
+
+        let fullText = '';
+        for(let i=1; i<=pdf.numPages; i++){
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const strings = content.items.map(item=>item.str);
+          fullText += strings.join(' ') + "\n\n";
+        }
+        output.value = fullText || '[No text extracted]';
+        status.textContent = 'Text extraction complete.';
+      } catch(e) {
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.textContent = 'Extract Text';
+      btn.disabled = input.files.length === 0;
+    });
+  }
+
+  // Excel to PDF
+  {
+    const input = document.getElementById('excel2pdf-file');
+    const btn = document.getElementById('excel2pdf-btn');
+    const status = document.getElementById('excel2pdf-status');
+
+    input.addEventListener('change', () => {
+      btn.disabled = input.files.length === 0;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    });
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.textContent = 'Converting Excel...';
+      status.textContent = '';
+      status.classList.remove('status-error');
+      try {
+        const file = input.files[0];
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, {type: 'array'});
+        const pdfDoc = await PDFDocument.create();
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+        for(const sheetName of workbook.SheetNames) {
+          const sheet = workbook.Sheets[sheetName];
+          const json = XLSX.utils.sheet_to_json(sheet, {header:1, blankrows:false});
+          if(!json.length) continue;
+
+          let page = pdfDoc.addPage([595,842]);
+          const pageHeight = page.getHeight();
+          const marginX = 40;
+          let y = pageHeight - 40;
+          const fontSize = 11;
+          const lineHeight = fontSize * 1.3;
+
+          page.drawText(`Sheet: ${sheetName}`, {x: marginX, y, size: 14, font, color: rgb(0.6, 0.6, 0.6)});
+          y -= lineHeight*2;
+
+          for(const row of json) {
+            const rowText = row.map(v => v !== undefined ? String(v) : "").join('    ');
+            if(y < 40) {
+              page = pdfDoc.addPage([595,842]);
+              y = pageHeight - 40;
+            }
+            page.drawText(rowText, {x: marginX, y, size: fontSize, font, color: rgb(1,1,1)});
+            y -= lineHeight;
+          }
+        }
+        const outputPdf = await pdfDoc.save();
+        downloadBlob(new Blob([outputPdf], {type:'application/pdf'}), file.name.replace(/\.(xlsx|xls)$/i, '.pdf'));
+        status.textContent = 'Excel converted to PDF.';
+      } catch(e) {
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.textContent = 'Convert and Download PDF';
+      btn.disabled = input.files.length === 0;
+    });
+  }
+
+
+  // Word to PDF (text only)
+  {
+    const input = document.getElementById('word2pdf-file');
+    const btn = document.getElementById('word2pdf-btn');
+    const status = document.getElementById('word2pdf-status');
+
+    input.addEventListener('change', () => {
+      btn.disabled = input.files.length === 0;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    });
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.textContent = 'Converting Word...';
+      status.textContent = '';
+      status.classList.remove('status-error');
+      try {
+        const file = input.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({arrayBuffer});
+        const text = result.value || '';
+        if(!text.trim()) throw new Error('No text extracted');
+
+        const pdfDoc = await PDFDocument.create();
+        let page = pdfDoc.addPage([595, 842]);
+        const {width, height} = page.getSize();
+        const font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+        const fontSize = 12;
+        const lineHeight = fontSize * 1.4;
+        const marginX = 40;
+        let y = height - 40;
+
+        const words = text.split(/\s+/);
+        let line = '';
+
+        for(const word of words){
+          const testLine = line ? line + ' ' + word : word;
+          const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+          if(testWidth > width - marginX*2 && line){
+            if(y < 40){
+              page = pdfDoc.addPage([595,842]);
+              y = height-40;
+            }
+            page.drawText(line, {x:marginX, y, size:fontSize, font, color: rgb(0,0,0)});
+            y -= lineHeight;
+            line = word;
+          } else {
+            line = testLine;
+          }
+        }
+        if(line){
+          page.drawText(line, {x:marginX, y, size:fontSize, font, color: rgb(0,0,0)});
+        }
+        const pdfBytes = await pdfDoc.save();
+        downloadBlob(new Blob([pdfBytes], {type:'application/pdf'}), file.name.replace(/\.docx$/i, '.pdf'));
+        status.textContent = 'Word converted to PDF (text only).';
+      }catch(e){
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.textContent = 'Convert and Download PDF';
+      btn.disabled = input.files.length === 0;
+    });
+  }
+
+  // PPT to PDF (text only)
+  {
+    const input = document.getElementById('ppt2pdf-file');
+    const btn = document.getElementById('ppt2pdf-btn');
+    const status = document.getElementById('ppt2pdf-status');
+
+    input.addEventListener('change', () => {
+      btn.disabled = input.files.length === 0;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    });
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.textContent = 'Converting PPT...';
+      status.textContent = '';
+      status.classList.remove('status-error');
+      try {
+        const file = input.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        if(!window.JSZip) throw new Error('JSZip library required');
+
+        const zip = await JSZip.loadAsync(arrayBuffer);
+        const slideFiles = Object.keys(zip.files).filter(name => /^ppt\/slides\/slide\d+\.xml$/i.test(name));
+        if(slideFiles.length === 0) throw new Error('No slides found');
+
+        const pdfDoc = await PDFDocument.create();
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+        for(let i=0; i<slideFiles.length; i++){
+          const content = await zip.file(slideFiles[i]).async('string');
+          const texts = [...content.matchAll(/<a:t>(.*?)<\/a:t>/g)];
+          const slideText = texts.map(m=>m[1]).join(' ');
+          const page = pdfDoc.addPage([595,842]);
+          const {width, height} = page.getSize();
+          const fontSize = 12;
+          const lineHeight = fontSize*1.4;
+          const marginX = 40;
+          let y = height - 40;
+
+          page.drawText(`Slide ${i+1}`, {x: marginX, y, size: 16, font, color: rgb(0.7,0.7,0.7)});
+          y -= lineHeight * 2;
+
+          const words = slideText.split(/\s+/);
+          const maxWidth = width - marginX * 2;
+          let line = '';
+
+          for(const word of words){
+            const testLine = line ? line+' '+word : word;
+            if(font.widthOfTextAtSize(testLine,fontSize) > maxWidth){
+              if(y < 40) y = height - 40;
+              page.drawText(line, {x: marginX, y, size: fontSize, font, color: rgb(1,1,1)});
+              y -= lineHeight;
+              line = word;
+            } else {
+              line = testLine;
+            }
+          }
+          if(line){
+            page.drawText(line, {x: marginX, y, size: fontSize, font, color: rgb(1,1,1)});
+          }
+        }
+        const pdfBytes = await pdfDoc.save();
+        downloadBlob(new Blob([pdfBytes], {type: 'application/pdf'}), file.name.replace(/\.pptx$/i,'.pdf'));
+        status.textContent = 'PPT converted to PDF (text only).';
+      }catch(e){
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.textContent = 'Convert and Download PDF';
+      btn.disabled = input.files.length === 0;
+    });
+  }
+
+  // FFmpeg related audio/video tools
+
+  const { createFFmpeg, fetchFile } = FFmpeg;
+  const ffmpeg = createFFmpeg({ log: false });
+
+  async function loadFFmpeg(statusElem) {
+    if(!ffmpeg.isLoaded()) {
+      statusElem.textContent = 'Loading ffmpeg core...';
+      await ffmpeg.load();
+      statusElem.textContent = '';
+    }
+  }
+
+  // Audio Convert
+  {
+    const input = document.getElementById('audio-input');
+    const select = document.getElementById('audio-format');
+    const btn = document.getElementById('audio-convert-btn');
+    const status = document.getElementById('audio-convert-status');
+
+    input.addEventListener('change', () => {
+      btn.disabled = !input.files.length;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    });
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      status.textContent = '';
+      status.classList.remove('status-error');
+      try {
+        await loadFFmpeg(status);
+        if(!input.files.length) throw new Error('No file selected');
+        const file = input.files[0];
+        const outputFormat = select.value;
+        status.textContent = 'Converting audio...';
+        const inName = 'input.' + file.name.split('.').pop();
+        const outName = 'output.' + outputFormat;
+
+        ffmpeg.FS('writeFile', inName, await fetchFile(file));
+        await ffmpeg.run('-i', inName, outName);
+        const data = ffmpeg.FS('readFile', outName);
+
+        downloadBlob(new Blob([data.buffer], {type: 'audio/' + outputFormat}), file.name.replace(/\.[^.]+$/, '.' + outputFormat));
+        status.textContent = 'Audio conversion complete.';
+        ffmpeg.FS('unlink', inName);
+        ffmpeg.FS('unlink', outName);
+      }catch(e){
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.disabled = false;
+    });
+  }
+
+  // Audio Trim
+  {
+    const input = document.getElementById('audio-trim-input');
+    const startInput = document.getElementById('audio-trim-start');
+    const endInput = document.getElementById('audio-trim-end');
+    const btn = document.getElementById('audio-trim-btn');
+    const status = document.getElementById('audio-trim-status');
+
+    function validate(){
+      const startVal = parseFloat(startInput.value);
+      const endVal = parseFloat(endInput.value);
+      btn.disabled = !input.files.length || isNaN(startVal) || isNaN(endVal) || endVal <= startVal;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    }
+    input.addEventListener('change', validate);
+    startInput.addEventListener('input', validate);
+    endInput.addEventListener('input', validate);
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      status.textContent = '';
+      status.classList.remove('status-error');
+      try {
+        await loadFFmpeg(status);
+        if(!input.files.length) throw new Error('No file selected');
+        const file = input.files[0];
+        const start = parseFloat(startInput.value);
+        const end = parseFloat(endInput.value);
+        if(end <= start) throw new Error('End time must be after start time');
+        const inName = 'audioIn.' + file.name.split('.').pop();
+        const outName = 'audioTrimmed.' + file.name.split('.').pop();
+
+        ffmpeg.FS('writeFile', inName, await fetchFile(file));
+        await ffmpeg.run('-ss', String(start), '-to', String(end), '-i', inName, '-c', 'copy', outName);
+        const data = ffmpeg.FS('readFile', outName);
+
+        downloadBlob(new Blob([data.buffer], {type: file.type}), file.name.replace(/\.[^.]+$/, '_trimmed.' + file.name.split('.').pop()));
+        status.textContent = 'Audio trimmed.';
+        ffmpeg.FS('unlink', inName);
+        ffmpeg.FS('unlink', outName);
+      }catch(e){
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.disabled = false;
+    });
+  }
+
+  // Video Convert
+  {
+    const input = document.getElementById('video-input');
+    const select = document.getElementById('video-format');
+    const btn = document.getElementById('video-convert-btn');
+    const status = document.getElementById('video-convert-status');
+
+    input.addEventListener('change', () => {
+      btn.disabled = !input.files.length;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    });
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      status.textContent = '';
+      status.classList.remove('status-error');
+      try {
+        await loadFFmpeg(status);
+        if(!input.files.length) throw new Error('No file selected');
+        const file = input.files[0];
+        const outputFormat = select.value;
+        status.textContent = 'Converting video...';
+        const inName = 'input.' + file.name.split('.').pop();
+        const outName = 'output.' + outputFormat;
+
+        ffmpeg.FS('writeFile', inName, await fetchFile(file));
+        await ffmpeg.run('-i', inName, outName);
+        const data = ffmpeg.FS('readFile', outName);
+
+        downloadBlob(new Blob([data.buffer], {type: 'video/' + outputFormat}), file.name.replace(/\.[^.]+$/, '.' + outputFormat));
+        status.textContent = 'Video conversion complete.';
+        ffmpeg.FS('unlink', inName);
+        ffmpeg.FS('unlink', outName);
+      }catch(e){
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.disabled = false;
+    });
+  }
+
+  // Video Trim
+  {
+    const input = document.getElementById('video-trim-input');
+    const startInput = document.getElementById('video-trim-start');
+    const endInput = document.getElementById('video-trim-end');
+    const btn = document.getElementById('video-trim-btn');
+    const status = document.getElementById('video-trim-status');
+
+    function validate(){
+      const startVal = parseFloat(startInput.value);
+      const endVal = parseFloat(endInput.value);
+      btn.disabled = !input.files.length || isNaN(startVal) || isNaN(endVal) || endVal <= startVal;
+      status.textContent = '';
+      status.classList.remove('status-error');
+    }
+    input.addEventListener('change', validate);
+    startInput.addEventListener('input', validate);
+    endInput.addEventListener('input', validate);
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      status.textContent = '';
+      status.classList.remove('status-error');
+      try {
+        await loadFFmpeg(status);
+        if(!input.files.length) throw new Error('No file selected');
+        const file = input.files[0];
+        const start = parseFloat(startInput.value);
+        const end = parseFloat(endInput.value);
+        if(end <= start) throw new Error('End time must be after start time');
+        const inName = 'videoIn.' + file.name.split('.').pop();
+        const outName = 'videoTrimmed.' + file.name.split('.').pop();
+
+        ffmpeg.FS('writeFile', inName, await fetchFile(file));
+        await ffmpeg.run('-ss', String(start), '-to', String(end), '-i', inName, '-c', 'copy', outName);
+        const data = ffmpeg.FS('readFile', outName);
+
+        downloadBlob(new Blob([data.buffer], {type: file.type}), file.name.replace(/\.[^.]+$/, '_trimmed.' + file.name.split('.').pop()));
+        status.textContent = 'Video trimmed.';
+        ffmpeg.FS('unlink', inName);
+        ffmpeg.FS('unlink', outName);
+      }catch(e){
+        status.textContent = 'Error: ' + e.message;
+        status.classList.add('status-error');
+      }
+      btn.disabled = false;
+    });
+  }
+</script>
+
+</body>
+</html>
+
